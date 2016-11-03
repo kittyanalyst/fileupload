@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Profile;
 @SpringBootApplication (exclude = {
 		FlywayAutoConfiguration.class
 })
-
 public class FileuploadApplication {
 
 	private static Logger logger = LoggerFactory.getLogger(FileuploadApplication.class);

@@ -30,6 +30,11 @@ war {
 	version = version
 }
 
+
+springBoot {
+	mainClass = 'com.amiti.cloud.FileuploadApplication'
+}
+
 ext {
 	postgresDriver = 'org.postgresql.Driver'
 	postgresDefaultDbName = 'postgres'
