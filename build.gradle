@@ -10,16 +10,53 @@ buildscript {
 	}
 }
 
+plugins {
+	id "org.flywaydb.flyway" version "4.0"
+}
+
+group = 'com.amiti'
+version = '1.0-SNAPSHOT'
+description = "File Upload API"
+
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'spring-boot'
 apply plugin: 'war'
 
 
 war {
-	baseName = 'fileupload'
-	version = '0.0.1-SNAPSHOT'
+	baseName = 'fileupload-api'
+	version = version
 }
+
+ext {
+	postgresDriver = 'org.postgresql.Driver'
+	postgresDefaultDbName = 'postgres'
+	postgresDbName = 'fileupload'
+	postgresHost = System.getenv('POSTGRES_HOST')
+	postgresPort = System.getenv('POSTGRES_PORT')
+	postgresUrl = "jdbc:postgresql://${postgresHost}:${postgresPort}/${postgresDbName}"
+	postgresUser = System.getenv('POSTGRES_USER')
+	postgresPassword = System.getenv('POSTGRES_PASSWORD')
+}
+
+processResources {
+	filesMatching('application.properties') {
+		expand(project.properties)
+	}
+}
+
+flyway {
+	driver = postgresDriver
+	url = postgresUrl
+	user = postgresUser
+	password = postgresPassword
+	locations = [
+			"classpath:db.migration"
+	]
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -54,6 +91,8 @@ dependencies {
 	//swagger
 	compile('io.swagger:swagger-jaxrs:1.5.8')
 
+	//flyway for db migrations
+	compile('org.flywaydb:flyway-core:4.0')
 
 
 }
