@@ -24,6 +24,11 @@ import javax.ws.rs.ext.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by ramchalasani on 11/1/16.
+ */
+
+
 @Configuration
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 public class CxfConfiguration {
