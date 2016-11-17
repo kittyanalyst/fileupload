@@ -39,7 +39,7 @@ public class PostgresRepositoryConfig {
     @Bean(name = "postgresEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean postgresEntityManager(EntityManagerFactoryBuilder builder) {
         return builder.dataSource(postgresDataSource())
-                .packages("com.amiti.fileupload.domain")
+                .packages("com.amiti.fileupload.user.domain")
                 .persistenceUnit("postgresPersistenceUnit")
                 .build();
     }
