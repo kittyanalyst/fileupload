@@ -31,6 +31,22 @@ war {
 }
 
 
+sourceSets {
+	generated {
+		java {
+			srcDirs = ['src/main/generated']
+		}
+	}
+
+	itest {
+		java {
+			srcDirs = ['src/itest/java']
+		}
+		compileClasspath += main.output + test.output
+		runtimeClasspath += main.output + test.output
+	}
+}
+
 springBoot {
 	mainClass = 'com.amiti.cloud.FileuploadApplication'
 }
@@ -57,9 +73,6 @@ flyway {
 	url = postgresUrl
 	user = postgresUser
 	password = postgresPassword
-	locations = [
-			"classpath:db.migration"
-	]
 }
 
 sourceCompatibility = 1.8
@@ -70,6 +83,8 @@ repositories {
 }
 
 configurations {
+	classpath
+	querydslapt
 	providedRuntime
 }
 
@@ -107,3 +122,36 @@ dependencyManagement {
 		mavenBom "com.vaadin:vaadin-bom:7.7.3"
 	}
 }
+
+clean {
+	delete sourceSets.generated.java.srcDirs
+}
+
+idea {
+	module {
+		sourceDirs += file('src/main/generated')
+	}
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+	source = sourceSets.main.java
+	classpath = configurations.compile + configurations.querydslapt
+	options.compilerArgs = [
+			"-proc:only",
+			"-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+	]
+	destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+}
+
+compileJava {
+	dependsOn generateQueryDSL
+	source generateQueryDSL.destinationDir
+}
+
+
+compileGeneratedJava {
+	dependsOn generateQueryDSL
+	options.warnings = false
+	classpath += sourceSets.main.runtimeClasspath
+}
+
