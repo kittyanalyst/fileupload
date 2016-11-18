@@ -50,4 +50,25 @@ public class LogonUser implements UserDetails {
     }
 
 
+    public static final class Builder {
+        private String logonId;
+
+        private Builder() {
+        }
+
+        public static Builder aLogonUser() {
+            return new Builder();
+        }
+
+        public Builder withLogonId(String logonId) {
+            this.logonId = logonId;
+            return this;
+        }
+
+        public LogonUser build() {
+            LogonUser logonUser = new LogonUser();
+            logonUser.logonId = this.logonId;
+            return logonUser;
+        }
+    }
 }
